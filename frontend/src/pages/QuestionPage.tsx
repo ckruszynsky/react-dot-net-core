@@ -7,7 +7,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { QuestionData, getQuestion } from '../api/Questions';
 import { gray3, gray6 } from '../styles';
 import { AnswerList } from '../components/AnswerList';
-import { Form } from '../components/Form';
+import { Form, required, minLength } from '../components/Form';
 import { Field } from '../components/Field';
 interface IRouteParams {
   questionId: string;
@@ -77,7 +77,11 @@ export const QuestionPage: FC<RouteComponentProps<IRouteParams>> = ({
                 margin-top: 20px;
               `}
             >
-              <Form submitCaption="Submit Your Answer">
+              <Form submitCaption="Submit Your Answer"
+               validationRules={{
+                content: [
+                { validator: required },
+                { validator: minLength, arg: 50 }]}}>
                 <Field name="content" label="Your Answer" type="TextArea" />
               </Form>
             </div>
