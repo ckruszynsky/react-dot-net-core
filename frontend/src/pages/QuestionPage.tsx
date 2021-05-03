@@ -6,9 +6,9 @@ import { Page } from './Page';
 import { RouteComponentProps } from 'react-router-dom';
 import { QuestionData, getQuestion } from '../api/Questions';
 import { gray3, gray6 } from '../styles';
-import {AnswerList} from '../components/AnswerList';
-
-
+import { AnswerList } from '../components/AnswerList';
+import { Form } from '../components/Form';
+import { Field } from '../components/Field';
 interface IRouteParams {
   questionId: string;
 }
@@ -66,10 +66,21 @@ export const QuestionPage: FC<RouteComponentProps<IRouteParams>> = ({
                 color: ${gray3};
               `}
             >
-              {`Asked by ${question.userName} on ${question.created.toLocaleDateString()}
+              {`Asked by ${
+                question.userName
+              } on ${question.created.toLocaleDateString()}
              ${question.created.toLocaleTimeString()}`}
             </div>
             <AnswerList data={question.answers} />
+            <div
+              css={css`
+                margin-top: 20px;
+              `}
+            >
+              <Form submitCaption="Submit Your Answer">
+                <Field name="content" label="Your Answer" type="TextArea" />
+              </Form>
+            </div>
           </Fragment>
         )}
       </div>
