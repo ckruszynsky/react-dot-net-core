@@ -39,9 +39,12 @@ const App: FC = () => {
                   `}
                 >
                   Loading....
-                </div>
+                </div>                
               }
-            ></Suspense>
+              
+            >
+              <AskPage />
+            </Suspense>
           </Route>
           <Route path="/signin" component={SignInPage} />
           <Route path="/questions/:questionId" component={QuestionPage} />
