@@ -34,7 +34,7 @@ export const Form: FC<Props> = ({ submitCaption, children }) => {
         css={css`
           margin-top: 10px auto 0 auto;
           padding: 30px;
-          width: 350px;
+          width: 500px;
           background-color: ${gray6};
           border-radius: 4px;
           border: 1px solid ${gray5};
