@@ -1,5 +1,5 @@
 import { FC, useContext, ChangeEvent } from 'react';
-import { Form, FormContext } from './Form';
+import { FormContext } from './Form';
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { css, jsx } from '@emotion/react';

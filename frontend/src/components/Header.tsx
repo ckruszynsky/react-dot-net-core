@@ -6,7 +6,7 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { UserIcon } from './Icons';
 import { fontFamily, fontSize, gray1, gray2, gray5 } from '../styles';
 
-export const Header: React.FC<RouteComponentProps> = ({
+export const Header: FC<RouteComponentProps> = ({
   history,
   location,
 }) => {
