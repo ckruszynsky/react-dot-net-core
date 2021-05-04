@@ -1,8 +1,8 @@
 import React from 'react';
-import { Page } from './Page';
-import { Form, required, minLength, Values, SubmitResult } from '../components/Form';
-import { Field } from '../components/Field';
-import { postQuestion } from '../api/Questions';
+import { Page } from '../components/Page/Page';
+import { Form, required, minLength, Values, SubmitResult } from '../components/Form/Form';
+import { Field } from '../components/Field/Field';
+import { postQuestion } from '../services/Questions';
 
 export const AskPage = () => {
   const handleSubmit = async (values:Values):Promise<SubmitResult> => {

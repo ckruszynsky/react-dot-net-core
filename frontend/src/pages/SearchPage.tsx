@@ -2,10 +2,10 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/react';
 import React, { FC, useState, useEffect } from 'react';
-import { Page } from './Page';
+import { Page } from '../components/Page/Page';
 import { RouteComponentProps } from 'react-router-dom';
-import { QuestionList } from '../components/QuestionList';
-import { searchQuestions, QuestionData } from '../api/Questions';
+import { QuestionList } from '../components/Question/QuestionList';
+import { searchQuestions, QuestionData } from '../services/Questions';
 
 export const SearchPage: FC<RouteComponentProps> = ({ location }) => {
   const [questions, setQuestions] = useState<QuestionData[]>([]);

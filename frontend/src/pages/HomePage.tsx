@@ -3,11 +3,11 @@
 import { css, jsx } from '@emotion/react';
 import React, { useEffect, useState, FC } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { PrimaryButton } from '../styles';
-import { QuestionList } from '../components/QuestionList';
-import { getUnansweredQuestions, QuestionData } from '../api/Questions';
-import { Page } from './Page';
-import { PageTitle } from '../components/PageTitle';
+import { PrimaryButton } from '../assets/styles';
+import { QuestionList } from '../components/Question/QuestionList';
+import { getUnansweredQuestions, QuestionData } from '../services/Questions';
+import { Page } from '../components/Page/Page';
+import { PageTitle } from '../components/PageTitle/PageTitle';
 
 export const HomePage: FC<RouteComponentProps> = ({ history }) => {
   const [questions, setQuestions] = useState<QuestionData[] | null>(null);

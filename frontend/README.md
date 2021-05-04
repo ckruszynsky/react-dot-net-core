@@ -1,3 +1,18 @@
+## Project Folder Structure
+* **Assets** : contains images and style files such as scss or a styles module. 
+
+* **Components** : contains a collection of UI components like button, custom inputs field, modal, etc... these components are shared and used across all files in the project. Each component should have their test included in their respective folders. This will also include components that are related to layout as well. 
+
+* **Pages** : this folder reflects the routes of the application. Each component inside this folder has its own route associated with it. A page component will contain children from the Elements folder, or its own subfolder. It also has its own state and usually call services as well. 
+
+* **Services** : contains modules to manage API integrations 
+
+* **Store** : includes actions an reducer subfolders for managing redux states. The actions and reducers will be called in the page components.
+
+* **utils** : contains utility functions that are used throughout the project. These files should contain only functions for things suchas date formatting, string conversion, etc...
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

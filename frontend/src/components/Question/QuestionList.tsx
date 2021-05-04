@@ -2,9 +2,9 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/react';
 import { FC } from 'react';
-import { gray5, accent2 } from '../styles';
-import { QuestionData } from '../api/Questions/QuestionData';
-import {Question} from './Question';
+import { gray5, accent2 } from '../../assets/styles';
+import { QuestionData } from '../../store/Question/QuestionData';
+import {QuestionItem} from './QuestionItem';
 
 interface IQuestionListProps {
   data: QuestionData[];
@@ -34,7 +34,7 @@ export const QuestionList: FC<IQuestionListProps> = ({ data, renderItem }) => (
         }
       `}
     >
-        {renderItem ? renderItem(question) : <Question data={question} />}
+        {renderItem ? renderItem(question) : <QuestionItem data={question} />}
     </li>
     ))}
   </ul>

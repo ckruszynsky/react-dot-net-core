@@ -2,21 +2,21 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/react';
 import { FC, useState, Fragment, useEffect } from 'react';
-import { Page } from './Page';
+import { Page } from '../components/Page/Page';
 import { RouteComponentProps } from 'react-router-dom';
-import { QuestionData, getQuestion } from '../api/Questions';
-import { postAnswer } from '../api/Answers';
+import { QuestionData, getQuestion } from '../services/Questions';
+import { postAnswer } from '../services/Answers';
 
-import { gray3, gray6 } from '../styles';
-import { AnswerList } from '../components/AnswerList';
+import { gray3, gray6 } from '../assets/styles';
+import { AnswerList } from '../components/Answer/AnswerList';
 import {
   Form,
   required,
   minLength,
   Values,
   SubmitResult,
-} from '../components/Form';
-import { Field } from '../components/Field';
+} from '../components/Form/Form';
+import { Field } from '../components/Field/Field';
 interface IRouteParams {
   questionId: string;
 }

@@ -8,8 +8,8 @@ import { SignInPage } from './pages/SignInPage';
 import { PageNotFound } from './pages/PageNotFound';
 import { HomePage } from './pages/HomePage';
 
-import { HeaderWithRouter as Header } from './components/Header';
-import { fontFamily, fontSize, gray2 } from './styles';
+import { HeaderWithRouter as Header } from './components/Header/Header';
+import { fontFamily, fontSize, gray2 } from './assets/styles';
 import { QuestionPage } from './pages/QuestionPage';
 
 const AskPage = lazy(() => import('./pages/AskPage'));
