@@ -5,9 +5,17 @@ import { FC, useState, Fragment, useEffect } from 'react';
 import { Page } from './Page';
 import { RouteComponentProps } from 'react-router-dom';
 import { QuestionData, getQuestion } from '../api/Questions';
+import { postAnswer } from '../api/Answers';
+
 import { gray3, gray6 } from '../styles';
 import { AnswerList } from '../components/AnswerList';
-import { Form, required, minLength } from '../components/Form';
+import {
+  Form,
+  required,
+  minLength,
+  Values,
+  SubmitResult,
+} from '../components/Form';
 import { Field } from '../components/Field';
 interface IRouteParams {
   questionId: string;
@@ -28,6 +36,16 @@ export const QuestionPage: FC<RouteComponentProps<IRouteParams>> = ({
       fetchGetQuestion(questionId);
     }
   }, [match.params.questionId]);
+
+  const handleSubmit = async (values: Values): Promise<SubmitResult> => {
+    const result = await postAnswer({
+      questionId: question!.questionId,
+      content: values.content,
+      userName: 'Fred',
+      created: new Date(),
+    });
+    return { success: result ? true : false, errors: {} };
+  };
 
   return (
     <Page>
@@ -77,11 +95,18 @@ export const QuestionPage: FC<RouteComponentProps<IRouteParams>> = ({
                 margin-top: 20px;
               `}
             >
-              <Form submitCaption="Submit Your Answer"
-               validationRules={{
-                content: [
-                { validator: required },
-                { validator: minLength, arg: 50 }]}}>
+              <Form
+                submitCaption="Submit Your Answer"
+                onSubmit={handleSubmit}
+                failureMessage="There was a problem with your answer"
+                successMessage="Your answer was successfully submitted"
+                validationRules={{
+                  content: [
+                    { validator: required },
+                    { validator: minLength, arg: 50 },
+                  ],
+                }}
+              >
                 <Field name="content" label="Your Answer" type="TextArea" />
               </Form>
             </div>

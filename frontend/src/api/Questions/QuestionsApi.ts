@@ -1,9 +1,11 @@
-import { QuestionData } from './QuestionData';
+import { PostQuestionData, QuestionData } from './QuestionData';
 import { questionsMock } from '../mocks/questions';
+
 
 const wait = (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
+
 
 export const getUnansweredQuestions = async (): Promise<QuestionData[]> => {
   await wait(500);
@@ -27,4 +29,18 @@ export const searchQuestions = async (
       q.title.toLowerCase().indexOf(criteria.toLowerCase()) >= 0 ||
       q.content.toLowerCase().indexOf(criteria.toLowerCase()) >= 0,
   );
+};
+
+export const postQuestion = async (
+  question: PostQuestionData,
+): Promise<QuestionData | undefined> => {
+  await wait(500);
+  const questionId = Math.max(...questionsMock.map((q) => q.questionId)) + 1;
+  const newQuestion: QuestionData = {
+    ...question,
+    questionId,
+    answers: [],
+  };
+  questionsMock.push(newQuestion);
+  return newQuestion;
 };

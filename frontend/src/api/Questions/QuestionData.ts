@@ -8,3 +8,10 @@ export interface QuestionData {
     created: Date;
     answers: AnswerData[]
 }
+
+export interface PostQuestionData {
+    title:string;
+    content: string;
+    userName: string;
+    created: Date;
+}
