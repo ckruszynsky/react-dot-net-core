@@ -5,7 +5,8 @@ import React, { FC, useState, useEffect } from 'react';
 import { Page } from '../components/Page/Page';
 import { RouteComponentProps } from 'react-router-dom';
 import { QuestionList } from '../components/Question/QuestionList';
-import { searchQuestions, QuestionData } from '../services/Questions';
+import { searchQuestions } from '../services/Questions';
+import {QuestionData} from '../models/QuestionData';
 
 export const SearchPage: FC<RouteComponentProps> = ({ location }) => {
   const [questions, setQuestions] = useState<QuestionData[]>([]);

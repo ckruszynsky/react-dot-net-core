@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { AnswerData } from '../../services/Answers';
+import { AnswerData } from '../../models/AnswerData';
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { css, jsx } from '@emotion/react';

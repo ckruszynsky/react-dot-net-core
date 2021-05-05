@@ -1,4 +1,4 @@
-import { AnswerData } from "../Answer/AnswerData";
+import { AnswerData } from "./AnswerData";
 
 export interface QuestionData {
     questionId: number;

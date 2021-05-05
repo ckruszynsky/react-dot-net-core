@@ -1,4 +1,4 @@
-import { QuestionData } from "../../store/Question/QuestionData";
+import { QuestionData } from "../../models/QuestionData";
 
 export const questionsMock: QuestionData[] = [
     {

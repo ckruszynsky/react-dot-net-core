@@ -1,4 +1,4 @@
-import { AnswerData, PostAnswerData } from '../../store/Answer/AnswerData';
+import { AnswerData, PostAnswerData } from '../../models/AnswerData';
 import { questionsMock } from '../mocks/questions';
 
 const wait = (ms: number): Promise<void> => {

@@ -2,7 +2,7 @@ import { FC } from 'react';
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { css, jsx } from '@emotion/react';
-import { QuestionData } from '../../store/Question/QuestionData';
+import { QuestionData } from '../../models/QuestionData';
 import { gray3, gray2 } from '../../assets/styles';
 import { Link } from 'react-router-dom';
 

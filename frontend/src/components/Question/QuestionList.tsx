@@ -3,7 +3,7 @@
 import { css, jsx } from '@emotion/react';
 import { FC } from 'react';
 import { gray5, accent2 } from '../../assets/styles';
-import { QuestionData } from '../../store/Question/QuestionData';
+import { QuestionData } from '../../models/QuestionData';
 import {QuestionItem} from './QuestionItem';
 
 interface IQuestionListProps {

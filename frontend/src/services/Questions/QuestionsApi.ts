@@ -1,4 +1,4 @@
-import { PostQuestionData, QuestionData } from '../../store/Question/QuestionData';
+import { PostQuestionData, QuestionData } from '../../models/QuestionData';
 import { questionsMock } from '../mocks/questions';
 
 

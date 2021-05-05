@@ -4,25 +4,22 @@ import { css, jsx } from '@emotion/react';
 import { FC, useState, Fragment, useEffect } from 'react';
 import { Page } from '../components/Page/Page';
 import { RouteComponentProps } from 'react-router-dom';
-import { QuestionData, getQuestion } from '../services/Questions';
+import { getQuestion } from '../services/Questions';
 import { postAnswer } from '../services/Answers';
-
+import {QuestionData} from '../models/QuestionData';
+import {PostAnswerData,AnswerData} from '../models/AnswerData';
 import { gray3, gray6 } from '../assets/styles';
 import { AnswerList } from '../components/Answer/AnswerList';
-import {
-  Form,
-  required,
-  minLength,
-  Values,
-  SubmitResult,
-} from '../components/Form/Form';
+import { Form, required, minLength, Values, SubmitResult } from '../components/Form/Form';
 import { Field } from '../components/Field/Field';
+import { connect } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
+
 interface IRouteParams {
   questionId: string;
 }
-export const QuestionPage: FC<RouteComponentProps<IRouteParams>> = ({
-  match,
-}) => {
+export const QuestionPage: FC<RouteComponentProps<IRouteParams>> = ({ match }) => {
   const [question, setQuestion] = useState<QuestionData | null>(null);
 
   useEffect(() => {
@@ -84,9 +81,7 @@ export const QuestionPage: FC<RouteComponentProps<IRouteParams>> = ({
                 color: ${gray3};
               `}
             >
-              {`Asked by ${
-                question.userName
-              } on ${question.created.toLocaleDateString()}
+              {`Asked by ${question.userName} on ${question.created.toLocaleDateString()}
              ${question.created.toLocaleTimeString()}`}
             </div>
             <AnswerList data={question.answers} />
@@ -101,10 +96,7 @@ export const QuestionPage: FC<RouteComponentProps<IRouteParams>> = ({
                 failureMessage="There was a problem with your answer"
                 successMessage="Your answer was successfully submitted"
                 validationRules={{
-                  content: [
-                    { validator: required },
-                    { validator: minLength, arg: 50 },
-                  ],
+                  content: [{ validator: required }, { validator: minLength, arg: 50 }],
                 }}
               >
                 <Field name="content" label="Your Answer" type="TextArea" />

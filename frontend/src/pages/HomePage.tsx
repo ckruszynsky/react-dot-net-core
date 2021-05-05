@@ -1,26 +1,35 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { css, jsx } from '@emotion/react';
-import React, { useEffect, useState, FC } from 'react';
+import React, { useEffect, FC } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { PrimaryButton } from '../assets/styles';
 import { QuestionList } from '../components/Question/QuestionList';
-import { getUnansweredQuestions, QuestionData } from '../services/Questions';
 import { Page } from '../components/Page/Page';
 import { PageTitle } from '../components/PageTitle/PageTitle';
+import { connect } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
+import { getUnansweredQuestionsActionCreator, AppState } from '../store/store';
+import { QuestionData } from '../models/QuestionData';
 
-export const HomePage: FC<RouteComponentProps> = ({ history }) => {
-  const [questions, setQuestions] = useState<QuestionData[] | null>(null);
-  const [questionsLoading, setQuestionsLoading] = useState(true);
+interface Props extends RouteComponentProps {
+  getUnansweredQuestions: () => Promise<void>;
+  questions: QuestionData[] | null;
+  questionsLoading: boolean;
+}
 
+const HomePage: FC<Props> = ({
+  history,
+  questions,
+  questionsLoading,
+  getUnansweredQuestions,
+}) => {
   useEffect(() => {
-    const fetchUnansweredQuestions = async () => {
-      const unansweredQuestions = await getUnansweredQuestions();
-      setQuestions(unansweredQuestions);
-      setQuestionsLoading(false);
-    };
-    fetchUnansweredQuestions();
-  }, []);
+    if (questions === null) {
+      getUnansweredQuestions();
+    }
+  }, [questions, getUnansweredQuestions]);
 
   const handleAskQuestionClick = () => {
     history.push('/ask');
@@ -55,3 +64,19 @@ export const HomePage: FC<RouteComponentProps> = ({ history }) => {
     </Page>
   );
 };
+
+const mapStateToProps = (store: AppState) => {
+  return {
+    questions: store.questions.unanswered,
+    questionsLoading: store.questions.loading,
+  };
+};
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AnyAction>) => {
+  return {
+    getUnansweredQuestions: () =>
+      dispatch(getUnansweredQuestionsActionCreator()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
