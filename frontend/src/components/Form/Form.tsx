@@ -159,9 +159,7 @@ export const Form: FC<Props> = ({
       <form noValidate={true} onSubmit={handleSubmit}>
         <fieldset
           css={css`
-            margin-top: 10px auto 0 auto;
-            padding: 30px;
-            width: 500px;
+            margin: 10px auto 0 auto;                        
             background-color: ${gray6};
             border-radius: 4px;
             border: 1px solid ${gray5};

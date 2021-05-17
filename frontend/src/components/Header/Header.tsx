@@ -1,29 +1,18 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { css, jsx } from '@emotion/react';
-import React, { ChangeEvent, FC, useState, FormEvent } from 'react';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import React, { ChangeEvent, FC, FormEvent } from 'react';
+import { Link} from 'react-router-dom';
 import { UserIcon } from '../Icons/Icons';
 import { fontFamily, fontSize, gray1, gray2, gray5 } from '../../assets/styles';
+import logo from '../../logo.svg';
 
-export const Header: FC<RouteComponentProps> = ({
-  history,
-  location,
-}) => {
-  const searchParams = new URLSearchParams(location.search);
-  const criteria = searchParams.get('criteria') || '';
-
-  const [search, setSearch] = useState(criteria);
-
-  const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.currentTarget.value);
-  };
-
-  const handleSearchSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    history.push(`/search?criteria=${search}`);
-   };
-
+interface HeaderProps{
+  onSearchSubmit : (e:FormEvent<HTMLFormElement>) => void;
+  onSearchInputChanged: (e:ChangeEvent<HTMLInputElement>) => void;
+  searchTerm: string;
+}
+export const Header: FC<HeaderProps> = ({ onSearchSubmit,onSearchInputChanged, searchTerm="" }) => {
   return (
     <div
       css={css`
@@ -49,14 +38,25 @@ export const Header: FC<RouteComponentProps> = ({
           text-decoration: none;
         `}
       >
-      Q&A
+        <div css={css` display:flex; align-items: center; justify-content: center;`}>
+          <div
+            css={css`
+              flex-basis: 40%;
+            `}
+          >
+            <img src={logo} alt="logo" height="50" />
+          </div>
+          <div>
+            Q&A
+          </div>
+        </div>
       </Link>
-      <form onSubmit={handleSearchSubmit}>
+      <form onSubmit={onSearchSubmit}>
         <input
           type="text"
           placeholder="Search..."
-          onChange={handleSearchInputChange}
-          value={search}
+          onChange={onSearchInputChanged}
+          value={searchTerm}
           css={css`
             box-sizing: border-box;
             font-family: ${fontFamily};
@@ -66,7 +66,7 @@ export const Header: FC<RouteComponentProps> = ({
             border-radius: 3px;
             color: ${gray2};
             background-color: white;
-            width: 200px;
+            width: 500px;
             height: 30px;
             :focus {
               outline-color: ${gray5};
@@ -99,4 +99,3 @@ export const Header: FC<RouteComponentProps> = ({
   );
 };
 
-export const HeaderWithRouter = withRouter(Header);

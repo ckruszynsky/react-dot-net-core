@@ -1,4 +1,4 @@
-import { FC, useContext, ChangeEvent } from 'react';
+import { FC, useContext, ChangeEvent, useEffect } from 'react';
 import { FormContext } from '../Form/Form';
 /** @jsxRuntime classic */
 /** @jsx jsx */
@@ -8,6 +8,7 @@ import { fontFamily, fontSize, gray5, gray2, gray6 } from '../../assets/styles';
 interface Props {
   name: string;
   label?: string;
+  initialValue?: any | undefined;
   type?: 'Text' | 'TextArea' | 'Password';
 }
 
@@ -30,11 +31,11 @@ const baseCSS = css`
   }
 `;
 
-export const Field: FC<Props> = ({ name, label, type = 'Text' }) => {
+export const Field: FC<Props> = ({ name, label, type = 'Text', initialValue }) => {
   const { setValue, touched, setTouched, validate } = useContext(FormContext);
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
-  ) => {
+  
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
     if (setValue) {
       setValue(name, e.currentTarget.value);
     }
@@ -51,7 +52,13 @@ export const Field: FC<Props> = ({ name, label, type = 'Text' }) => {
     if (validate) {
       validate(name);
     }
-  };
+  }; 
+  
+  useEffect(() => {
+    if (initialValue && setValue) {
+      setValue(name, initialValue);
+    }    
+  }, [initialValue, name, setValue])
   return (
     <FormContext.Consumer>
       {({ values, errors }) => (

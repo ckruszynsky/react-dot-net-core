@@ -1,21 +1,4 @@
-## Project Folder Structure
-* **Assets** : contains images and style files such as scss or a styles module. 
-
-* **Components** : contains a collection of UI components like button, custom inputs field, modal, etc... these components are shared and used across all files in the project. Each component should have their test included in their respective folders. This will also include components that are related to layout as well. 
-
-* **Pages** : this folder reflects the routes of the application. Each component inside this folder has its own route associated with it. A page component will contain children from the Elements folder, or its own subfolder. It also has its own state and usually call services as well. 
-
-* **Services** : contains modules to manage API integrations 
-
-* **Store** : includes actions an reducer subfolders for managing redux states. The actions and reducers will be called in the page components.
-
-* **utils** : contains utility functions that are used throughout the project. These files should contain only functions for things suchas date formatting, string conversion, etc...
-
-
-
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
 
 ## Available Scripts
 
@@ -23,23 +6,23 @@ In the project directory, you can run:
 
 ### `yarn start`
 
-Runs the app in the development mode.\
+Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
+The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
 
 ### `yarn test`
 
-Launches the test runner in the interactive watch mode.\
+Launches the test runner in the interactive watch mode.<br />
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `yarn build`
 
-Builds the app for production to the `build` folder.\
+Builds the app for production to the `build` folder.<br />
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
+The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
