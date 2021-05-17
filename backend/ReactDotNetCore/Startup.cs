@@ -25,18 +25,29 @@ namespace ReactDotNetCore
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            
+
             EnsureDatabase.For.SqlDatabase(connectionString);
 
             var upgrader = DeployChanges.To
-            .SqlDatabase(connectionString,null)
+            .SqlDatabase(connectionString, null)
             .WithScriptsEmbeddedInAssembly(System.Reflection.Assembly.GetExecutingAssembly())
             .WithTransaction()
             .LogToConsole()
             .Build();
-            
-            if(upgrader.IsUpgradeRequired()){
-                upgrader.PerformUpgrade();
+
+            if (upgrader.IsUpgradeRequired())
+            {
+                var result = upgrader.PerformUpgrade();
+                if (!result.Successful)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(result.Error);
+                    Console.ResetColor();
+                }
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Success!");
+                Console.ResetColor();
             }
 
             services.AddRazorPages();
