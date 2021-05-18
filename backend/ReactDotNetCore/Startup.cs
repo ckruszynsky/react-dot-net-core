@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ReactDotNetCore.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,8 +50,9 @@ namespace ReactDotNetCore
                 Console.WriteLine("Success!");
                 Console.ResetColor();
             }
-
+            services.AddScoped<IDataRepository,DataRepository>();
             services.AddRazorPages();
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,6 +80,7 @@ namespace ReactDotNetCore
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
         }
     }

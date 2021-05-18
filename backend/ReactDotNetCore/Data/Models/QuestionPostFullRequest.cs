@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ReactDotNetCore.Data.Models
 {
-    public class QuestionPostRequest
+    public class QuestionPostFullRequest
     {
         [Required]
         [StringLength(100)]
