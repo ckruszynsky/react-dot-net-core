@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using ReactDotNetCore.Data;
 using ReactDotNetCore.Data.Models;
+using ReactDotNetCore.Hubs;
 
 namespace ReactDotNetCore.Controllers
 {
@@ -11,9 +13,11 @@ namespace ReactDotNetCore.Controllers
     public class QuestionsController : ControllerBase
     {
         private readonly IDataRepository _dataRepository;
-        public QuestionsController(IDataRepository dataRepository)
+        private readonly IHubContext<QuestionsHub> _questionHubContext;
+        public QuestionsController(IDataRepository dataRepository, IHubContext<QuestionsHub> questionHubContext)
         {
             _dataRepository = dataRepository;
+            _questionHubContext = questionHubContext;
 
         }
 
@@ -111,6 +115,10 @@ namespace ReactDotNetCore.Controllers
                     Created = DateTime.UtcNow
                 }
             );
+
+            _questionHubContext.Clients
+                .Group($"Question-{answerPostRequest.QuestionId.Value}")
+                .SendAsync("ReceiveQuestion",_dataRepository.GetQuestion(answerPostRequest.QuestionId.Value));
 
             return savedAnswer;
         }
