@@ -1,32 +1,16 @@
-import { FC, useState, createContext, FormEvent } from 'react';
+import { FC, createContext, FormEvent } from 'react';
 import { PrimaryButton, gray5, gray6 } from '../../assets/styles';
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { css, jsx } from '@emotion/react';
-
-export interface Values {
-  [key: string]: any;
-}
-export interface Errors {
-  [key: string]: string[];
-}
-
-export interface Touched {
-  [key: string]: boolean;
-}
-
-export interface SubmitResult {
-  success: boolean;
-  errors?: Errors;
-}
-
-interface Validation {
-  validator: Validator;
-  arg?: any;
-}
-interface ValidationProp {
-  [key: string]: Validation | Validation[];
-}
+import { Values } from './Values';
+import { Errors } from './Errors';
+import { Touched } from './Touched';
+import { SubmitResult } from './SubmitResult';
+import { Validation } from './Validation';
+import { ValidationProp } from './ValidationProp';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { clearValues, selectErrors, selectSubmitError, selectSubmitted, selectSubmitting, selectTouched, selectValues, setErrors, setSubmitError, setSubmitted, setSubmitting, setTouched, setValues } from './formslice';
 
 interface Props {
   submitCaption?: string;
@@ -52,14 +36,6 @@ export const FormContext = createContext<FormContextProps>({
   touched: {},
 });
 
-type Validator = (value: any, args?: any) => string;
-
-export const required: Validator = (value: any): string =>
-  value === undefined || value === null || value === '' ? 'This must be populated' : '';
-
-export const minLength: Validator = (value: any, length: number): string =>
-  value && value.length < length ? `This must be at least ${length} characters` : '';
-
 export const Form: FC<Props> = ({
   submitCaption,
   children,
@@ -69,13 +45,14 @@ export const Form: FC<Props> = ({
   successMessage = 'Success !',
   failureMessage = 'Something went wrong',
 }) => {
-  const [values, setValues] = useState<Values>({});
-  const [errors, setErrors] = useState<Errors>({});
-  const [touched, setTouched] = useState<Touched>({});
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [submitError, setSubmitError] = useState(false);
-
+  const values = useAppSelector(selectValues);
+  const errors = useAppSelector(selectErrors);
+  const touched = useAppSelector(selectTouched);
+  const submitting = useAppSelector(selectSubmitting);
+  const submitted = useAppSelector(selectSubmitted);
+  const submitError = useAppSelector(selectSubmitError);
+  const dispatch = useAppDispatch();
+  
   const validate = (fieldName: string): string[] => {
     if (!validationRules) {
       return [];
@@ -97,7 +74,7 @@ export const Form: FC<Props> = ({
     });
 
     const newErrors = { ...errors, [fieldName]: fieldErrors };
-    setErrors(newErrors);
+    dispatch(setErrors(newErrors));    
     return fieldErrors;
   };
 
@@ -112,7 +89,7 @@ export const Form: FC<Props> = ({
         }
       });
     }
-    setErrors(newErrors);
+    dispatch(setErrors(newErrors));
     return !haveError;
   };
 
@@ -125,8 +102,8 @@ export const Form: FC<Props> = ({
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
-      setSubmitting(true);
-      setSubmitError(false);
+      dispatch(setSubmitting(true))
+      dispatch(setSubmitError(false));
 
       const result = await onSubmit(values);
 
@@ -135,24 +112,26 @@ export const Form: FC<Props> = ({
         return;
       }
 
-      setErrors(result.errors || {});
-      setSubmitError(!result.success);
-      setSubmitting(false);
-      setSubmitted(true);
+      dispatch(setErrors(result.errors || {}));
+      dispatch(setSubmitError(!result.success));
+      dispatch(setSubmitting(false));
+      dispatch(setSubmitted(false));
+      dispatch(clearValues());
     }
   };
+
   return (
     <FormContext.Provider
       value={{
         values,
-        setValue: (fieldName: string, value: any) => {
-          setValues({ ...values, [fieldName]: value });
+        setValue: (fieldName: string, value: any) => {                   
+          dispatch(setValues({ fieldName, value}));
         },
         errors,
         validate,
         touched,
-        setTouched: (fieldName: string) => {
-          setTouched({ ...touched, [fieldName]: true });
+        setTouched: (fieldName: string) => {     
+          dispatch(setTouched({...touched, [fieldName]: true}));
         },
       }}
     >

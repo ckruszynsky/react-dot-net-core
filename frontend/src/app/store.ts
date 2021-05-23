@@ -3,6 +3,7 @@ import counterReducer from '../features/counter/counterSlice';
 import questionsReducer from '../features/questions/questionsSlice';
 import usersReducer from '../features/users/usersSlice';
 import searchReducer from '../features/search/searchSlice';
+import formReducer from '../components/Form/formslice';
 
 
 export const store = configureStore({
@@ -10,7 +11,8 @@ export const store = configureStore({
     counter: counterReducer,
     questions: questionsReducer,
     users: usersReducer,
-    search: searchReducer
+    search: searchReducer,
+    forms: formReducer
   }  
 });
 

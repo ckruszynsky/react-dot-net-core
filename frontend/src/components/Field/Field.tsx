@@ -58,7 +58,7 @@ export const Field: FC<Props> = ({ name, label, type = 'Text', initialValue }) =
     if (initialValue && setValue) {
       setValue(name, initialValue);
     }    
-  }, [initialValue, name, setValue])
+  }, [initialValue, name])
   return (
     <FormContext.Consumer>
       {({ values, errors }) => (

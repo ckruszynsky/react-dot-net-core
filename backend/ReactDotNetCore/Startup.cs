@@ -55,6 +55,14 @@ namespace ReactDotNetCore
             services.AddSignalR();
             services.AddRazorPages();
             services.AddControllers();
+            services.AddCors(options => {
+                options.AddDefaultPolicy(
+                builder => 
+                    builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                );                
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,6 +84,8 @@ namespace ReactDotNetCore
             app.UseStaticFiles();
 
             app.UseRouting();
+            
+            app.UseCors();
 
             app.UseAuthorization();
 
