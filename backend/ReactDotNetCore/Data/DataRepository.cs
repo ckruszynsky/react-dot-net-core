@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using Dapper;
 using ReactDotNetCore.Data.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ReactDotNetCore.Data
 {
@@ -82,6 +83,26 @@ namespace ReactDotNetCore.Data
                     @"EXEC dbo.Question_GetMany_BySearch @Search= @Search",
                     new { Search = search }
                 );
+            }
+        }
+
+        public IEnumerable<QuestionGetManyResponse> GetQuestionsWithAnswers()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var questions = connection.Query<QuestionGetManyResponse>(
+                    @"Exec dbo.Question_GetMany"
+                );
+                foreach (var question in questions)
+                {
+                    question.Answers = connection.Query<AnswerGetResponse>(
+                        @"EXEC dbo.Answer_Get_ByQuestionId
+                        @QuestionId = @QuestionId",
+                        new { QuestionId = question.QuestionId })
+                    .ToList();
+                }
+                return questions;
             }
         }
 
