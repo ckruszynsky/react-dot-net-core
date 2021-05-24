@@ -1,5 +1,5 @@
 import React, { FC, Fragment, useEffect } from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { RootState } from '../../app/store';
 import { AccentButton, gray6 } from '../../assets/styles';
@@ -7,7 +7,11 @@ import { Page } from '../../components/Page/Page';
 import { PageTitle } from '../../components/PageTitle/PageTitle';
 import { Spinner } from '../../components/Spinner/Spinner';
 import { QuestionAuthor } from './components/QuestionAuthor';
-import { fetchQuestionByIdAsync, selectCurrentQuestion } from './questionsSlice';
+import {
+  fetchQuestionByIdAsync,
+  selectCurrentQuestion,
+  clearCurrentQuestion,
+} from './questionsSlice';
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { css, jsx } from '@emotion/react';
@@ -22,13 +26,21 @@ interface IQuestionDetailsPageProps {
 export const QuestionDetailsPage: FC<RouteComponentProps<IQuestionDetailsPageProps>> = ({
   match,
 }) => {
+  const history = useHistory();
   const { questionId } = match.params;
   const question = useAppSelector(selectCurrentQuestion);
   const status = useAppSelector((state: RootState) => state.questions.status);
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(fetchQuestionByIdAsync(questionId));
+    return () => {
+      dispatch(clearCurrentQuestion());
+    };
   }, [dispatch, questionId]);
+
+  const handleOnEditClick = () => {
+    history.push(`/questions/edit/${questionId}`);
+  };
 
   return (
     <Page>
@@ -52,7 +64,7 @@ export const QuestionDetailsPage: FC<RouteComponentProps<IQuestionDetailsPagePro
               `}
             >
               <PageTitle>{question.title}</PageTitle>
-              <AccentButton>Edit</AccentButton>
+              <AccentButton onClick={handleOnEditClick}>Edit</AccentButton>
             </div>
 
             <p

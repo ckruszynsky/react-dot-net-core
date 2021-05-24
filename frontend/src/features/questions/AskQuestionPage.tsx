@@ -1,7 +1,10 @@
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { Field } from '../../components/Field/Field';
-import { Form, minLength, required, Values, SubmitResult } from '../../components/Form/Form';
+import { Form } from '../../components/Form/Form';
+import { SubmitResult } from "../../components/Form/SubmitResult";
+import { minLength, required } from '../../components/Form/Validator';
+import { Values } from "../../components/Form/Values";
 import { Page } from '../../components/Page/Page';
 import { addNewQuestionAsync,selectCurrentQuestion, clearCurrentQuestion} from './questionsSlice';
 

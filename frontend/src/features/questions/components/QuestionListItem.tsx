@@ -57,7 +57,7 @@ export const QuestionItem: FC<IQuestionProps> = ({ data, showContent = true }) =
       <TimeAgo timestamp={data.created} />
     </div>
     <div>
-      <ReactionButtons question={data} />
+      {/* <ReactionButtons question={data} /> */}
     </div>
   </div>
 );

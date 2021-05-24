@@ -1,15 +1,14 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../app/store';
-import { fetchQuestionById, fetchQuestions, addNewQuestion } from './api';
+import { fetchQuestionById, fetchQuestions, addNewQuestion, UpdateQuestion } from './api';
 import { NewQuestion, QuestionData, Reaction } from './model';
-
 
 //define a type for the slice state
 export interface QuestionsState {
   status: 'idle' | 'loading' | 'failed';
   error: string | null;
   questionList?: QuestionData[];
-  selectedQuestion?: QuestionData
+  selectedQuestion?: QuestionData;
 }
 
 interface ReactionAddedPayload {
@@ -17,9 +16,9 @@ interface ReactionAddedPayload {
   reaction: string;
 }
 
-const initialState:QuestionsState = { 
+const initialState: QuestionsState = {
   status: 'idle',
-  error: null
+  error: null,
 };
 
 export const fetchQuestionsAsync = createAsyncThunk(
@@ -31,45 +30,47 @@ export const fetchQuestionsAsync = createAsyncThunk(
   },
 );
 
-
 export const fetchQuestionByIdAsync = createAsyncThunk(
-    'question/fetchQuestionById',
-    async(questionId: string) => {
-        const response = await fetchQuestionById(questionId);
-        return response;
-    }
+  'question/fetchQuestionById',
+  async (questionId: string) => {
+    const response = await fetchQuestionById(questionId);
+    return response;
+  },
 );
 
 export const addNewQuestionAsync = createAsyncThunk(
-    'questions/add',
-    async(newQuestion:NewQuestion) => {
-        const response = await addNewQuestion(newQuestion);
-        return response;
-    }
+  'questions/add',
+  async (newQuestion: NewQuestion) => {
+    const response = await addNewQuestion(newQuestion);
+    return response;
+  },
+);
+
+export const updateQuestionAsync = createAsyncThunk(
+  'question/editQuestion',
+  async (question: QuestionData) => {
+    const response = await UpdateQuestion(question.questionId, question);
+    return response;
+  },
 );
 
 export const questionsSlice = createSlice({
   name: 'questions',
   initialState,
   reducers: {
+    currentQuestionSelected: (state, action: PayloadAction<QuestionData>) => {
+      state.selectedQuestion = action.payload;
+    },
     reactionAdded: (state, action: PayloadAction<ReactionAddedPayload>) => {
       const { questionId, reaction } = action.payload;
       const existingQuestion = state?.questionList?.find((q) => q.questionId === questionId);
-      if (existingQuestion) {          
-          existingQuestion.reactions[reaction as keyof Reaction]++;
-      }
-    },
-    questionUpdated: (state, action: PayloadAction<QuestionData>) => {
-      const { questionId, title, content } = action.payload;
-      const existingQuestion = state.questionList?.find((q) => q.questionId === questionId);
       if (existingQuestion) {
-        existingQuestion.title = title;
-        existingQuestion.content = content;
+        existingQuestion.reactions[reaction as keyof Reaction]++;
       }
-    },  
+    },   
     clearCurrentQuestion: (state) => {
-        state.selectedQuestion = undefined;
-    }
+      state.selectedQuestion = undefined;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -80,31 +81,34 @@ export const questionsSlice = createSlice({
         state.status = 'idle';
         state.questionList = action.payload;
       })
-      .addCase(fetchQuestionByIdAsync.pending, (state)=> {
-          state.status = 'loading';
-       })
-       .addCase(fetchQuestionByIdAsync.fulfilled, (state,action)=> {
-         state.status = 'idle';
-         state.selectedQuestion = action.payload
-       })
-       .addCase(addNewQuestionAsync.pending, (state) => {
-           state.status = 'loading';
-       })
-       .addCase(addNewQuestionAsync.fulfilled, (state,action) => {
-           state.status = 'idle';
-           state.questionList?.push(action.payload);
-           state.selectedQuestion = action.payload;
-       })
-
+      .addCase(fetchQuestionByIdAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchQuestionByIdAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.selectedQuestion = action.payload;
+      })
+      .addCase(addNewQuestionAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(addNewQuestionAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.questionList?.push(action.payload);
+        state.selectedQuestion = action.payload;
+      })
+      .addCase(updateQuestionAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateQuestionAsync.fulfilled, (state) => {
+        state.status = 'idle';
+      });
   },
 });
 
-export const { questionUpdated,reactionAdded, clearCurrentQuestion } = questionsSlice.actions;
+export const { reactionAdded, clearCurrentQuestion, currentQuestionSelected } =
+  questionsSlice.actions;
 
 export default questionsSlice.reducer;
 
 export const selectAllQuestions = (state: RootState) => state.questions.questionList;
-export const selectCurrentQuestion = (state:RootState) => state.questions.selectedQuestion;
-
-
-
+export const selectCurrentQuestion = (state: RootState) => state.questions.selectedQuestion;
