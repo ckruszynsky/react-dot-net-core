@@ -4,6 +4,7 @@ using Dapper;
 using ReactDotNetCore.Data.Models;
 using System.Collections.Generic;
 using System.Linq;
+using static Dapper.SqlMapper;
 
 namespace ReactDotNetCore.Data
 {
@@ -42,27 +43,29 @@ namespace ReactDotNetCore.Data
             }
         }
 
-        public QuestionGetSingleResponse GetQuestion(int questionId)
-        {
+       public QuestionGetSingleResponse GetQuestion(int questionId)
+       {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                var question = connection.QueryFirstOrDefault<QuestionGetSingleResponse>(
-                    @"EXEC dbo.Question_GetSingle @QuestionId = @QuestionId",
-                    new { QuestionId = questionId }
-                );
-                if (question != null)
-                {
-                    question.Answers = connection.Query<AnswerGetResponse>(
-                        @"EXEC dbo.Answer_Get_ByQuestionId
+                using (GridReader results = connection.QueryMultiple(
+                    @"EXEC dbo.Question_GetSingle
+                    @QuestionId = @QuestionId;
+                    EXEC dbo.Answer_Get_ByQuestionId
                     @QuestionId = @QuestionId",
-                        new { QuestionId = questionId }
-                    );
+                    new { QuestionId = questionId }
+                ))
+                {
+                    var question = results.Read<QuestionGetSingleResponse>().FirstOrDefault();
+                    if (question != null)
+                    {
+                        question.Answers = results.Read<AnswerGetResponse>().ToList();
+                    }
+                    return question;
                 }
-                return question;
             }
         }
-
+        
         public IEnumerable<QuestionGetManyResponse> GetQuestions()
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -91,18 +94,24 @@ namespace ReactDotNetCore.Data
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                var questions = connection.Query<QuestionGetManyResponse>(
-                    @"Exec dbo.Question_GetMany"
-                );
-                foreach (var question in questions)
-                {
-                    question.Answers = connection.Query<AnswerGetResponse>(
-                        @"EXEC dbo.Answer_Get_ByQuestionId
-                        @QuestionId = @QuestionId",
-                        new { QuestionId = question.QuestionId })
-                    .ToList();
-                }
-                return questions;
+                var questionDictionary = new Dictionary<int,QuestionGetManyResponse>();
+
+                return connection.Query<QuestionGetManyResponse,AnswerGetResponse,QuestionGetManyResponse>
+                (
+                    "EXEC dbo.Question_GetMany_WithAnswers",
+                    map:(q,a) => {
+                        QuestionGetManyResponse question;
+                        if(!questionDictionary.TryGetValue(q.QuestionId,out question)){
+                            question = q;
+                            question.Answers = new List<AnswerGetResponse>();
+                            questionDictionary.Add(question.QuestionId,question);
+                        }
+                        question.Answers.Add(a);
+                        return question;
+                    },
+                    splitOn: "QuestionId"
+                ).Distinct()
+                .ToList();                
             }
         }
 

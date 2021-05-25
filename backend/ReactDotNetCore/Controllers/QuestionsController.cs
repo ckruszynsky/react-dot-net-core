@@ -22,7 +22,7 @@ namespace ReactDotNetCore.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<QuestionGetManyResponse> GetQuestions(string search,bool includeAnswers)
+        public IEnumerable<QuestionGetManyResponse> GetQuestions(string search="",bool includeAnswers=false)
         {
             if(includeAnswers){
                 return _dataRepository.GetQuestionsWithAnswers();
