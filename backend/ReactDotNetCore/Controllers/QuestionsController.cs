@@ -22,14 +22,14 @@ namespace ReactDotNetCore.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<QuestionGetManyResponse> GetQuestions(string search="",bool includeAnswers=false)
+        public IEnumerable<QuestionGetManyResponse> GetQuestions(string search="",bool includeAnswers=false, int page = 1, int pageSize =20)
         {
             if(includeAnswers){
                 return _dataRepository.GetQuestionsWithAnswers();
             }
             return string.IsNullOrEmpty(search) ?
                 _dataRepository.GetQuestions() :
-                _dataRepository.GetQuestionsBySearch(search);
+                _dataRepository.GetQuestionsBySearchWithPaging(search,page,pageSize);
         }
 
         [HttpGet("unanswered")]

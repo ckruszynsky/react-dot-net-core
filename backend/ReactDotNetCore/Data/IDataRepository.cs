@@ -7,6 +7,7 @@ namespace ReactDotNetCore.Data
     {
         IEnumerable<QuestionGetManyResponse> GetQuestions();
         IEnumerable<QuestionGetManyResponse> GetQuestionsBySearch(string search);
+        IEnumerable<QuestionGetManyResponse>GetQuestionsBySearchWithPaging(string search,int pageNumber,int pageSize);
         IEnumerable<QuestionGetManyResponse> GetQuestionsWithAnswers();
         QuestionGetSingleResponse GetQuestion(int questionId);
         IEnumerable<QuestionGetManyResponse> GetUnansweredQuestions();

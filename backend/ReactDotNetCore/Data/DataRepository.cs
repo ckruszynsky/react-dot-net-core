@@ -43,8 +43,8 @@ namespace ReactDotNetCore.Data
             }
         }
 
-       public QuestionGetSingleResponse GetQuestion(int questionId)
-       {
+        public QuestionGetSingleResponse GetQuestion(int questionId)
+        {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -65,7 +65,7 @@ namespace ReactDotNetCore.Data
                 }
             }
         }
-        
+
         public IEnumerable<QuestionGetManyResponse> GetQuestions()
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -73,6 +73,26 @@ namespace ReactDotNetCore.Data
                 connection.Open();
                 return connection.Query<QuestionGetManyResponse>(
                     @"EXEC dbo.Question_GetMany"
+                );
+            }
+        }
+
+        public IEnumerable<QuestionGetManyResponse> GetQuestionsBySearchWithPaging(string search, int pageNumber, int pageSize)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var parameters = new
+                {
+                    Search = search,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                };
+                return connection.Query<QuestionGetManyResponse>(
+                        @"EXEC dbo.Question_GetMany_BySearch_WithPaging
+                        @Search = @Search,
+                        @PageNumber = @PageNumber,
+                        @PageSize = @PageSize", parameters
                 );
             }
         }
@@ -94,24 +114,26 @@ namespace ReactDotNetCore.Data
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                var questionDictionary = new Dictionary<int,QuestionGetManyResponse>();
+                var questionDictionary = new Dictionary<int, QuestionGetManyResponse>();
 
-                return connection.Query<QuestionGetManyResponse,AnswerGetResponse,QuestionGetManyResponse>
+                return connection.Query<QuestionGetManyResponse, AnswerGetResponse, QuestionGetManyResponse>
                 (
                     "EXEC dbo.Question_GetMany_WithAnswers",
-                    map:(q,a) => {
+                    map: (q, a) =>
+                    {
                         QuestionGetManyResponse question;
-                        if(!questionDictionary.TryGetValue(q.QuestionId,out question)){
+                        if (!questionDictionary.TryGetValue(q.QuestionId, out question))
+                        {
                             question = q;
                             question.Answers = new List<AnswerGetResponse>();
-                            questionDictionary.Add(question.QuestionId,question);
+                            questionDictionary.Add(question.QuestionId, question);
                         }
                         question.Answers.Add(a);
                         return question;
                     },
                     splitOn: "QuestionId"
                 ).Distinct()
-                .ToList();                
+                .ToList();
             }
         }
 
